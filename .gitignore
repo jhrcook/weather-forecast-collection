@@ -194,3 +194,6 @@ Thumbs.db #thumbnail cache on Windows
 
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,python
+
+secrets.py
+keys.py
