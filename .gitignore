@@ -197,3 +197,6 @@ Thumbs.db #thumbnail cache on Windows
 
 secrets.py
 keys.py
+
+# Requests cache
+dev-cache.sqlite

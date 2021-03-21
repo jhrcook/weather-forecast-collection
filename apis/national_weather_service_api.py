@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Collect forecast data from the National Weather Service API."""
+
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 

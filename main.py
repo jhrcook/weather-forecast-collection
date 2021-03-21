@@ -2,8 +2,13 @@
 
 from datetime import datetime
 
+import requests_cache
+
 import coordinates as coord
+from apis import accuweather_api as accuweather
 from apis import national_weather_service_api as nws
+
+requests_cache.install_cache("dev-cache.sqlite", backend="sqlite", expire_after=86400)
 
 
 def fmt_date(dt: datetime) -> str:
@@ -11,11 +16,12 @@ def fmt_date(dt: datetime) -> str:
 
 
 if __name__ == "__main__":
-    nws_forecast: nws.NSWForecast = nws.get_nsw_forecast(
-        coord.LATITUDE, coord.LONGITUDE
+    # nws_forecast: nws.NSWForecast = nws.get_nsw_forecast(
+    #     coord.LATITUDE, coord.LONGITUDE
+    # )
+    # print(len(nws_forecast.seven_day.periods))
+    # print(len(nws_forecast.hourly_forecast.periods))
+
+    accu_forecast = accuweather.get_accuweather_forecast(
+        lat=coord.LATITUDE, long=coord.LONGITUDE
     )
-    print(len(nws_forecast.seven_day.periods))
-    print(len(nws_forecast.hourly_forecast.periods))
-    # for period in nws_forecast.seven_day:
-    #     when = "day" if period.isDaytime else "night"
-    # print(f"{fmt_date(period.startTime)} ({when}): {period.temperature} {period.temperatureUnit}")
