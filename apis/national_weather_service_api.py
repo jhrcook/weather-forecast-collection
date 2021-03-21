@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-from pprint import pprint
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
