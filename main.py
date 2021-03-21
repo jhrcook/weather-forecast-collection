@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
+from pprint import pprint
 
 import requests_cache
 
@@ -25,3 +26,4 @@ if __name__ == "__main__":
     accu_forecast = accuweather.get_accuweather_forecast(
         lat=coord.LATITUDE, long=coord.LONGITUDE
     )
+    pprint(accu_forecast.dict())

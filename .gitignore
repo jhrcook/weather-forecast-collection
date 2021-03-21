@@ -200,3 +200,4 @@ keys.py
 
 # Requests cache
 dev-cache.sqlite
+dev-cache.sqlite.sqlite

@@ -19,7 +19,7 @@ def to_camel(string: str) -> str:
     return "".join(word.capitalize() for word in string.split("_"))
 
 
-class Temperature(BaseModel):
+class ValueUnit(BaseModel):
     value: float
     unit: str
 
@@ -27,9 +27,17 @@ class Temperature(BaseModel):
         alias_generator = to_camel
 
 
-class AccuTemperature(BaseModel):
-    metric: Temperature
-    imperial: Temperature
+class MultimetricTemperature(BaseModel):
+    metric: ValueUnit
+    imperial: ValueUnit
+
+    class Config:
+        alias_generator = to_camel
+
+
+class MinMaxTemperature(BaseModel):
+    minimum: ValueUnit
+    maximum: ValueUnit
 
     class Config:
         alias_generator = to_camel
@@ -41,10 +49,10 @@ class AccuConditions(BaseModel):
     has_precipitation: bool
     precipitation: Optional[str]
     is_day_time: bool
-    temperature: AccuTemperature
-    apparent_temperature: AccuTemperature
-    real_feel_temperature: AccuTemperature
-    real_feel_temperature_shade: AccuTemperature
+    temperature: MultimetricTemperature
+    apparent_temperature: MultimetricTemperature
+    real_feel_temperature: MultimetricTemperature
+    real_feel_temperature_shade: MultimetricTemperature
     relative_humidity: float
     cloud_cover: float
 
@@ -52,8 +60,51 @@ class AccuConditions(BaseModel):
         alias_generator = to_camel
 
 
+class AccuSummary(BaseModel):
+    icon_phrase: str
+    has_precipitation: bool
+    short_phrase: str
+    long_phrase: str
+    precipitation_probability: float
+    thunderstorm_probability: float
+    rain_probability: float
+    snow_probability: float
+    ice_probability: float
+    total_liquid: ValueUnit
+    rain: ValueUnit
+    snow: ValueUnit
+    ice: ValueUnit
+    hours_of_precipitation: float
+    hours_of_rain: float
+    hours_of_snow: float
+    hours_of_ice: float
+    cloud_cover: float
+
+    class Config:
+        alias_generator = to_camel
+
+
+class AccuDayForecast(BaseModel):
+    date: datetime
+    temperature: MinMaxTemperature
+    real_feel_temperature: MinMaxTemperature
+    real_feel_temperature_shade: MinMaxTemperature
+    day: AccuSummary
+    night: AccuSummary
+
+    class Config:
+        alias_generator = to_camel
+
+
+class AccuFiveDayForecast(BaseModel):
+    effective_date: datetime
+    end_date: datetime
+    daily_forecasts: List[AccuDayForecast]
+
+
 class AccuForecast(BaseModel):
     conditions: AccuConditions
+    five_day: AccuFiveDayForecast
 
 
 #### ---- Getters ---- ####
@@ -80,7 +131,7 @@ def tidy_current_condition(data: Dict[str, Any]) -> AccuConditions:
     return AccuConditions(**data)
 
 
-def get_current_conditions(lat: float, long: float, loc_key: str) -> AccuConditions:
+def get_current_conditions(loc_key: str) -> AccuConditions:
     base_url = f"http://dataservice.accuweather.com/currentconditions/v1/{loc_key}?"
     response = requests.get(base_url + f"apikey={API_KEY}&details=true")
     if response.status_code == 200:
@@ -88,13 +139,32 @@ def get_current_conditions(lat: float, long: float, loc_key: str) -> AccuConditi
     else:
         print(f"Error: {response.status_code}")
         print(response.json())
-        raise Exception("Error requesting location data from Accuweather.")
+        raise Exception("Error requesting current conditions from Accuweather.")
+
+
+def tidy_five_day_forecast(data: Dict[str, Any]) -> AccuFiveDayForecast:
+    return AccuFiveDayForecast(
+        effective_date=data["Headline"]["EffectiveDate"],
+        end_date=data["Headline"]["EndDate"],
+        daily_forecasts=[AccuDayForecast(**d) for d in data["DailyForecasts"]],
+    )
+
+
+def get_five_day_forecast(loc_key: str) -> AccuFiveDayForecast:
+    base_url = f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{loc_key}?"
+    response = requests.get(base_url + f"apikey={API_KEY}&details=true")
+    if response.status_code == 200:
+        return tidy_five_day_forecast(response.json())
+    else:
+        print(f"Error: {response.status_code}")
+        print(response.json())
+        raise Exception("Error requesting forecast data from Accuweather.")
 
 
 def get_accuweather_forecast(lat: float, long: float) -> AccuForecast:
     location = get_location_key(lat=lat, long=long)
-    conditions = get_current_conditions(lat=lat, long=long, loc_key=location)
-
+    conditions = get_current_conditions(loc_key=location)
+    five_day_forecast = get_five_day_forecast(loc_key=location)
     # TODO: forecasts (https://developer.accuweather.com/accuweather-forecast-api/apis)
 
-    return AccuForecast(conditions=conditions)
+    return AccuForecast(conditions=conditions, five_day=five_day_forecast)
