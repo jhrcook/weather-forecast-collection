@@ -26,4 +26,4 @@ if __name__ == "__main__":
     accu_forecast = accuweather.get_accuweather_forecast(
         lat=coord.LATITUDE, long=coord.LONGITUDE
     )
-    pprint(accu_forecast.dict())
+    print(accu_forecast)
