@@ -18,6 +18,8 @@ A collection of weather forcasts and nowcasts.
 
 ### The Weather Company (The Weather Channel)
 
+I am currently unable to find where I can get an API key.
+
 - https://weather.com/swagger-docs/call-for-code
 
 ### National Weather Service
@@ -39,3 +41,7 @@ The API is no longer open, but I may try to webscrape the HTML or use RapidAPI.
 ### ClimaCell
 
 - https://www.climacell.co/weather-api/
+
+### OpenWeatherMap
+
+- https://openweathermap.org/api

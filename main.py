@@ -6,10 +6,11 @@ from pprint import pprint
 import requests_cache
 
 import coordinates as coord
-from apis import accuweather_api as accuweather
+from apis import accuweather_api as accu
 from apis import national_weather_service_api as nws
+from apis import openweathermap_api as owm
 
-requests_cache.install_cache("dev-cache.sqlite", backend="sqlite", expire_after=86400)
+# requests_cache.install_cache("dev-cache.sqlite", backend="sqlite", expire_after=86400)
 
 
 def fmt_date(dt: datetime) -> str:
@@ -21,8 +22,8 @@ if __name__ == "__main__":
     #     coord.LATITUDE, coord.LONGITUDE
     # )
 
-    # accu_forecast = accuweather.get_accuweather_forecast(
+    # accu_forecast = accu.get_accuweather_forecast(
     #     lat=coord.LATITUDE, long=coord.LONGITUDE
     # )
 
-    print("hi")
+    owm.get_openweathermap_data(lat=coord.LATITUDE, long=coord.LONGITUDE)
