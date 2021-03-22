@@ -2,15 +2,16 @@
 
 """Collect forecast data from the Accuweather API."""
 
+import pickle
 from datetime import date, datetime
+from pathlib import Path
 from pprint import pprint
 from secrets import accuweather_api_key as API_KEY
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import requests
 import requests_cache
-from pydantic import BaseModel, HttpUrl
-from requests_cache.backends import base
+from pydantic import BaseModel
 
 #### ---- Models ---- ####
 
@@ -139,11 +140,42 @@ class AccuForecast(BaseModel):
 
 #### ---- Getters ---- ####
 
+ACCU_CACHE = Path("accuweather-cache.pkl")
 
-def cache(func: function) -> Any:
-    # TODO: look into a record of locations instead of making another request.
-    # TODO: If need to make a request, cache the new key.
-    return None
+
+def get_cache_dict() -> Dict[str, Any]:
+    if not ACCU_CACHE.exists():
+        return dict()
+    with open(ACCU_CACHE, "rb") as f:
+        return pickle.load(f)
+
+
+def store_cache_dict(d: Dict[str, Any]) -> None:
+    with open(ACCU_CACHE, "wb") as f:
+        pickle.dump(d, f)
+
+
+def cache(func: Callable) -> Any:
+
+    cache_dict = get_cache_dict()
+
+    def cache_wrapper(*args, **kwargs):
+        key = "[" + func.__name__ + "]"
+        for arg in args:
+            key += str(hash(arg)) + "_"
+        for k, v in kwargs.items():
+            key += str(hash(k)) + ":" + str(hash(v)) + "_"
+
+        cached_value = cache_dict.get(key)
+        if cached_value is not None:
+            return cached_value
+
+        val = func(*args, **kwargs)
+        cache_dict[key] = val
+        store_cache_dict(cache_dict)
+        return val
+
+    return cache_wrapper
 
 
 @cache
