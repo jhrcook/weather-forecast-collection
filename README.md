@@ -31,6 +31,11 @@ A collection of weather forcasts and nowcasts.
 
 ### Dark Sky
 
-The API is no longer open, but I may try to webscrape the HTML...
+The API is no longer open, but I may try to webscrape the HTML or use RapidAPI.
 
 - https://darksky.net
+- https://rapidapi.com/darkskyapis/api/dark-sky
+
+### ClimaCell
+
+- https://www.climacell.co/weather-api/

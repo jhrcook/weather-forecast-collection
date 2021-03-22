@@ -20,10 +20,9 @@ if __name__ == "__main__":
     # nws_forecast: nws.NSWForecast = nws.get_nsw_forecast(
     #     coord.LATITUDE, coord.LONGITUDE
     # )
-    # print(len(nws_forecast.seven_day.periods))
-    # print(len(nws_forecast.hourly_forecast.periods))
 
-    accu_forecast = accuweather.get_accuweather_forecast(
-        lat=coord.LATITUDE, long=coord.LONGITUDE
-    )
-    print(accu_forecast)
+    # accu_forecast = accuweather.get_accuweather_forecast(
+    #     lat=coord.LATITUDE, long=coord.LONGITUDE
+    # )
+
+    print("hi")
