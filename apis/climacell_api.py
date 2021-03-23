@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Collect forecast data from the ClimaCell API."""
+
 from datetime import datetime
 from enum import Enum
 from pprint import pprint
@@ -8,8 +10,6 @@ from typing import Any, Dict, List
 
 import requests
 from pydantic import BaseModel
-
-from apis.helpers import to_camel
 
 
 class TimeSteps(str, Enum):
