@@ -13,11 +13,9 @@ import requests
 import requests_cache
 from pydantic import BaseModel
 
+from apis.helpers import to_camel
+
 #### ---- Models ---- ####
-
-
-def to_camel(string: str) -> str:
-    return "".join(word.capitalize() for word in string.split("_"))
 
 
 class ValueUnit(BaseModel):

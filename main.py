@@ -7,6 +7,7 @@ import requests_cache
 
 import coordinates as coord
 from apis import accuweather_api as accu
+from apis import climacell_api as cc
 from apis import national_weather_service_api as nws
 from apis import openweathermap_api as owm
 
@@ -26,5 +27,8 @@ if __name__ == "__main__":
     #     lat=coord.LATITUDE, long=coord.LONGITUDE
     # )
 
-    owm_forecast = owm.get_openweathermap_data(lat=coord.LATITUDE, long=coord.LONGITUDE)
-    print(owm_forecast)
+    # owm_forecast = owm.get_openweathermap_data(lat=coord.LATITUDE, long=coord.LONGITUDE)
+    # print(owm_forecast)
+
+    climacell_forecast = cc.get_climacell_data(lat=coord.LATITUDE, long=coord.LONGITUDE)
+    print(climacell_forecast)
