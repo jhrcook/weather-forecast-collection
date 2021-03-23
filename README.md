@@ -18,6 +18,9 @@ A collection of weather forcasts and nowcasts.
 
 ### The Weather Company (The Weather Channel)
 
+From what I can tell, this API used to be open, but is now only available to
+individuals with a "personal weather station" linked with Weather Underground.
+
 - https://weather.com/swagger-docs/call-for-code
 
 ### National Weather Service (done)
