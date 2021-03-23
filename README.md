@@ -10,7 +10,7 @@ A collection of weather forcasts and nowcasts.
 
 ## Sources
 
-### AccuWeather
+### AccuWeather (done)
 
 - https://developer.accuweather.com/apis
 - https://developer.accuweather.com/accuweather-current-conditions-api/apis
@@ -18,16 +18,18 @@ A collection of weather forcasts and nowcasts.
 
 ### The Weather Company (The Weather Channel)
 
-I am currently unable to find where I can get an API key.
-
 - https://weather.com/swagger-docs/call-for-code
 
-### National Weather Service
+### National Weather Service (done)
 
 - https://www.weather.gov/documentation/services-web-api
 - https://weather-gov.github.io/api/
 
-### Yahoo Weather
+### Yahoo Weather (skip)
+
+A banner on the documentation website indicates that this API will be closed soon.
+
+> On approximately May 1, 2021, the free Yahoo Weather API will be retired and will cease to function. Unfortunately, we will not be offering a replacement API, and there will be no paid alternative.
 
 - https://developer.yahoo.com/weather/documentation.html
 
@@ -38,10 +40,10 @@ The API is no longer open, but I may try to webscrape the HTML or use RapidAPI.
 - https://darksky.net
 - https://rapidapi.com/darkskyapis/api/dark-sky
 
-### ClimaCell
+### ClimaCell (done)
 
 - https://www.climacell.co/weather-api/
 
-### OpenWeatherMap
+### OpenWeatherMap (done)
 
 - https://openweathermap.org/api
