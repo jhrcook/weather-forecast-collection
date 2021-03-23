@@ -6,7 +6,7 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-A collection of weather forcasts and nowcasts.
+A collection of weather forecasts and nowcasts.
 
 ## Sources
 
