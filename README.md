@@ -8,6 +8,24 @@
 
 A collection of weather forecasts and nowcasts.
 
+## Install
+
+```bash
+pip install git+https://github.com/jhrcook/weather_forecast_collection.git
+```
+
+## Quickstart
+
+(In progress.)
+
+### AccuWeather
+
+```python
+from weather_forecast_collection.apis import accuweather_api
+
+data = get_accuweather_forecast(lat=latitude, long=longitude, api_key=ACCU_KEY)
+```
+
 ## Sources
 
 ### AccuWeather (done)
