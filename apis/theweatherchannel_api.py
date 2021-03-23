@@ -6,15 +6,9 @@ From what I can tell, this API used to be open, but is now only available to
 individuals with a "personal weather station" linked with Weather Underground.
 """
 
-
-from datetime import datetime
-from enum import Enum
 from pprint import pprint
-from secrets import climacell_api_key as API_KEY
-from typing import Any, Dict, List
 
 import requests
-from pydantic import BaseModel
 
 BASE_URL = "https://api.weather.com"
 
