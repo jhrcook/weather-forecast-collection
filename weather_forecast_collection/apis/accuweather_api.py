@@ -3,17 +3,15 @@
 """Collect forecast data from the Accuweather API."""
 
 import pickle
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 from pprint import pprint
-from secrets import accuweather_api_key as API_KEY
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional
 
 import requests
-import requests_cache
 from pydantic import BaseModel
 
-from apis.helpers import to_camel
+from weather_forecast_collection.helpers import to_camel
 
 #### ---- Models ---- ####
 
@@ -177,11 +175,11 @@ def cache(func: Callable) -> Any:
 
 
 @cache
-def get_location_key(lat: float, long: float) -> str:
+def get_location_key(lat: float, long: float, api_key: str) -> str:
     base_url = (
         "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?"
     )
-    response = requests.get(base_url + f"apikey={API_KEY}&q={lat},{long}&details=true")
+    response = requests.get(base_url + f"apikey={api_key}&q={lat},{long}&details=true")
     if response.status_code == 200:
         return response.json()["Key"]
     else:
@@ -194,9 +192,9 @@ def tidy_current_condition(data: Dict[str, Any]) -> AccuConditions:
     return AccuConditions(**data)
 
 
-def get_current_conditions(loc_key: str) -> AccuConditions:
+def get_current_conditions(loc_key: str, api_key: str) -> AccuConditions:
     base_url = f"http://dataservice.accuweather.com/currentconditions/v1/{loc_key}?"
-    response = requests.get(base_url + f"apikey={API_KEY}&details=true")
+    response = requests.get(base_url + f"apikey={api_key}&details=true")
     if response.status_code == 200:
         return tidy_current_condition(response.json()[0])
     else:
@@ -213,9 +211,9 @@ def tidy_five_day_forecast(data: Dict[str, Any]) -> AccuFiveDayForecast:
     )
 
 
-def get_five_day_forecast(loc_key: str) -> AccuFiveDayForecast:
+def get_five_day_forecast(loc_key: str, api_key: str) -> AccuFiveDayForecast:
     base_url = f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{loc_key}?"
-    response = requests.get(base_url + f"apikey={API_KEY}&details=true")
+    response = requests.get(base_url + f"apikey={api_key}&details=true")
     if response.status_code == 200:
         return tidy_five_day_forecast(response.json())
     else:
@@ -228,11 +226,11 @@ def tidy_hour_forecast(data: List[Dict[str, Any]]) -> AccuTwelveHourForecast:
     return AccuTwelveHourForecast(periods=[AccuHourForecast(**d) for d in data])
 
 
-def get_twelve_hour_forecast(loc_key: str) -> AccuTwelveHourForecast:
+def get_twelve_hour_forecast(loc_key: str, api_key: str) -> AccuTwelveHourForecast:
     base_url = (
         f"http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/{loc_key}?"
     )
-    response = requests.get(base_url + f"apikey={API_KEY}&details=true")
+    response = requests.get(base_url + f"apikey={api_key}&details=true")
     if response.status_code == 200:
         # pprint(response.json())
         return tidy_hour_forecast(response.json())
@@ -243,11 +241,11 @@ def get_twelve_hour_forecast(loc_key: str) -> AccuTwelveHourForecast:
         raise Exception("Error requesting hourly forecast data from Accuweather.")
 
 
-def get_accuweather_forecast(lat: float, long: float) -> AccuForecast:
-    location = get_location_key(lat=lat, long=long)
-    conditions = get_current_conditions(loc_key=location)
-    daily_forecast = get_five_day_forecast(loc_key=location)
-    hourly_forecast = get_twelve_hour_forecast(loc_key=location)
+def get_accuweather_forecast(lat: float, long: float, api_key: str) -> AccuForecast:
+    location = get_location_key(lat=lat, long=long, api_key=api_key)
+    conditions = get_current_conditions(loc_key=location, api_key=api_key)
+    daily_forecast = get_five_day_forecast(loc_key=location, api_key=api_key)
+    hourly_forecast = get_twelve_hour_forecast(loc_key=location, api_key=api_key)
     return AccuForecast(
         datetime=datetime.now(),
         conditions=conditions,

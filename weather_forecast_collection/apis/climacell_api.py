@@ -4,8 +4,6 @@
 
 from datetime import datetime
 from enum import Enum
-from pprint import pprint
-from secrets import climacell_api_key as API_KEY
 from typing import Any, Dict, List
 
 import requests
@@ -128,14 +126,14 @@ def tidy_timeline(data: List[Dict[str, Any]]) -> CCForecastData:
 CLIMACELL_DATA_TIMESTEPS = ["current", "1h", "1d"]
 
 
-def get_climacell_data(lat: float, long: float) -> CCForecastData:
+def get_climacell_data(lat: float, long: float, api_key: str) -> CCForecastData:
     url = "https://data.climacell.co/v4/timelines"
     querystring = {
         "fields": CLIMACELL_DATA_FIELDS,
         "location": f"{lat},{long}",
         "timesteps": CLIMACELL_DATA_TIMESTEPS,
         "units": "metric",
-        "apikey": API_KEY,
+        "apikey": api_key,
     }
     response = requests.get(url, params=querystring)
     if response.status_code == 200:

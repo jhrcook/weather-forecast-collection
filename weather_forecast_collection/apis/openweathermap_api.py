@@ -4,11 +4,10 @@
 
 from datetime import datetime
 from pprint import pprint
-from secrets import openweathermap_api_key as API_KEY
 from typing import Any, Dict, List
 
 import requests
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 #### ---- Models ---- ####
 
@@ -95,14 +94,14 @@ def tidy_owm_onecall_data(data: Dict[str, Any]) -> OWMForecast:
 #### ---- Methods ---- ####
 
 
-def get_current_weather(city: str, state: str, country: str):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{state},{country}&appid={API_KEY}&units=metric"
+def get_current_weather(city: str, state: str, country: str, api_key: str):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{state},{country}&appid={api_key}&units=metric"
     response = requests.get(url)
     pprint(response.json())
 
 
-def get_onecall_data(lat: float, long: float) -> OWMForecast:
-    url = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={long}&appid={API_KEY}&units=metric"
+def get_onecall_data(lat: float, long: float, api_key: str) -> OWMForecast:
+    url = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={long}&appid={api_key}&units=metric"
     response = requests.get(url)
     if response.status_code == 200:
         return tidy_owm_onecall_data(response.json())
@@ -115,5 +114,5 @@ def get_onecall_data(lat: float, long: float) -> OWMForecast:
 #### ---- Main ---- ####
 
 
-def get_openweathermap_data(lat: float, long: float):
-    return get_onecall_data(lat=lat, long=long)
+def get_openweathermap_data(lat: float, long: float, api_key: str):
+    return get_onecall_data(lat=lat, long=long, api_key=api_key)
