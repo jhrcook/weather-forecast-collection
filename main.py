@@ -10,7 +10,7 @@ from apis import accuweather_api as accu
 from apis import national_weather_service_api as nws
 from apis import openweathermap_api as owm
 
-# requests_cache.install_cache("dev-cache.sqlite", backend="sqlite", expire_after=86400)
+requests_cache.install_cache("dev-cache.sqlite", backend="sqlite", expire_after=86400)
 
 
 def fmt_date(dt: datetime) -> str:
@@ -26,4 +26,5 @@ if __name__ == "__main__":
     #     lat=coord.LATITUDE, long=coord.LONGITUDE
     # )
 
-    owm.get_openweathermap_data(lat=coord.LATITUDE, long=coord.LONGITUDE)
+    owm_forecast = owm.get_openweathermap_data(lat=coord.LATITUDE, long=coord.LONGITUDE)
+    print(owm_forecast)
