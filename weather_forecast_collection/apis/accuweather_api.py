@@ -12,7 +12,7 @@ import requests
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 
-from .helpers import to_camel
+from ..helpers import to_camel
 
 #### ---- Models ---- ####
 
