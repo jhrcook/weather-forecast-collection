@@ -22,7 +22,7 @@ setup(
     project_urls={
         "Issue Tracker": "https://github.com/jhrcook/weather_forecast_collection/issues",
     },
-    packages=find_packages(),
+    packages=["weather_forecast_collection", "weather_forecast_collection.apis"],
     long_description=read("README.md"),
     classifiers=[
         "Development Status :: 4 - Beta",
