@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 
 import requests
 from pydantic import BaseModel
+from requests.exceptions import HTTPError
 
 #### ---- Models ---- ####
 
@@ -94,10 +95,10 @@ def tidy_owm_onecall_data(data: Dict[str, Any]) -> OWMForecast:
 #### ---- Methods ---- ####
 
 
-def get_current_weather(city: str, state: str, country: str, api_key: str):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{state},{country}&appid={api_key}&units=metric"
-    response = requests.get(url)
-    pprint(response.json())
+# def get_current_weather(city: str, state: str, country: str, api_key: str):
+#     url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{state},{country}&appid={api_key}&units=metric"
+#     response = requests.get(url)
+# pprint(response.json())
 
 
 def get_onecall_data(lat: float, long: float, api_key: str) -> OWMForecast:
@@ -106,9 +107,7 @@ def get_onecall_data(lat: float, long: float, api_key: str) -> OWMForecast:
     if response.status_code == 200:
         return tidy_owm_onecall_data(response.json())
     else:
-        print(f"Error ({response.status_code})")
-        print(response.json())
-        raise Exception("Unable to get OpenWeatherMap data.")
+        raise HTTPError(response=response)
 
 
 #### ---- Main ---- ####

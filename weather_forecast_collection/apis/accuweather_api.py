@@ -10,8 +10,9 @@ from typing import Any, Callable, Dict, List, Optional
 
 import requests
 from pydantic import BaseModel
+from requests.exceptions import HTTPError
 
-from weather_forecast_collection.helpers import to_camel
+from .helpers import to_camel
 
 #### ---- Models ---- ####
 
@@ -183,9 +184,7 @@ def get_location_key(lat: float, long: float, api_key: str) -> str:
     if response.status_code == 200:
         return response.json()["Key"]
     else:
-        print(f"Error: {response.status_code}")
-        print(response.json())
-        raise Exception("Error requesting location data from Accuweather.")
+        raise HTTPError(response=response)
 
 
 def tidy_current_condition(data: Dict[str, Any]) -> AccuConditions:
@@ -198,9 +197,7 @@ def get_current_conditions(loc_key: str, api_key: str) -> AccuConditions:
     if response.status_code == 200:
         return tidy_current_condition(response.json()[0])
     else:
-        print(f"Error: {response.status_code}")
-        print(response.json())
-        raise Exception("Error requesting current conditions from Accuweather.")
+        raise HTTPError(response=response)
 
 
 def tidy_five_day_forecast(data: Dict[str, Any]) -> AccuFiveDayForecast:
@@ -217,9 +214,7 @@ def get_five_day_forecast(loc_key: str, api_key: str) -> AccuFiveDayForecast:
     if response.status_code == 200:
         return tidy_five_day_forecast(response.json())
     else:
-        print(f"Error: {response.status_code}")
-        print(response.json())
-        raise Exception("Error requesting forecast data from Accuweather.")
+        raise HTTPError(response=response)
 
 
 def tidy_hour_forecast(data: List[Dict[str, Any]]) -> AccuTwelveHourForecast:
@@ -232,13 +227,9 @@ def get_twelve_hour_forecast(loc_key: str, api_key: str) -> AccuTwelveHourForeca
     )
     response = requests.get(base_url + f"apikey={api_key}&details=true")
     if response.status_code == 200:
-        # pprint(response.json())
         return tidy_hour_forecast(response.json())
-        return None
     else:
-        print(f"Error: {response.status_code}")
-        pprint(response.json())
-        raise Exception("Error requesting hourly forecast data from Accuweather.")
+        raise HTTPError(response=response)
 
 
 def get_accuweather_forecast(lat: float, long: float, api_key: str) -> AccuForecast:

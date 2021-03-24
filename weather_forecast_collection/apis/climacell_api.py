@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 
 import requests
 from pydantic import BaseModel
+from requests.exceptions import HTTPError
 
 
 class TimeSteps(str, Enum):
@@ -139,6 +140,4 @@ def get_climacell_data(lat: float, long: float, api_key: str) -> CCForecastData:
     if response.status_code == 200:
         return tidy_timeline(response.json()["data"]["timelines"])
     else:
-        print(f"Error ({response.status_code})")
-        print(response.json())
-        raise Exception("Error getting data from ClimaCell AI.")
+        raise HTTPError(response=response)

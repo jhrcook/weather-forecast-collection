@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 from pydantic import BaseModel, HttpUrl
+from requests.exceptions import HTTPError
 
 
 class NWSPeriodForecast(BaseModel):
@@ -46,9 +47,7 @@ def get_grid_points(lat: float, long: float) -> Dict[Any, Any]:
     if response.status_code == 200:
         return response.json()
     else:
-        print(f"error: {response.status_code}")
-        print(response.json())
-        raise Exception("Failed request.")
+        raise HTTPError(response=response)
 
 
 def get_grid_coords(lat: float, long: float) -> Tuple[int, int]:
@@ -69,9 +68,7 @@ def get_seven_day_forecast(grid_x: int, grid_y: int) -> NSWSevenDayForecast:
     if response.status_code == 200:
         return NSWSevenDayForecast(periods=extract_period_data(response))
     else:
-        print(f"Error ({response.status_code})")
-        print(response.json()["detail"])
-        raise Exception("Error retriving National Weather Service forecast.")
+        raise HTTPError(response=response)
 
 
 def build_hourly_forecast(res: requests.Response) -> NSWHourlyForecast:
@@ -91,9 +88,7 @@ def get_hourly_forecast(grid_x: int, grid_y: int) -> NSWHourlyForecast:
     if response.status_code == 200:
         return build_hourly_forecast(response)
     else:
-        print(f"Error ({response.status_code})")
-        print(response.json()["detail"])
-        raise Exception("Error retriving National Weather Service hourly forecast.")
+        raise HTTPError(response=response)
 
 
 def get_nsw_forecast(lat: float, long: float) -> NSWForecast:
