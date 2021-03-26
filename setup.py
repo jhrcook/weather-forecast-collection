@@ -1,6 +1,6 @@
 import os
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 # Utility function to read the README file.
@@ -13,7 +13,7 @@ def read(file_name: str):
 
 setup(
     name="weather_forecast_collection",
-    version="0.1.1",
+    version="0.1.2",
     author="Joshua Cook",
     description=("Simple wrappers for several open weather APIs."),
     license="BSD",
