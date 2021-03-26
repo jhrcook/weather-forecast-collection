@@ -30,71 +30,71 @@ class MinMaxTemperature(BaseModel):
 
 
 class AccuConditions(BaseModel):
-    local_observation_date_time: datetime
-    weather_text: str
-    has_precipitation: bool
+    localObservationDateTime: datetime
+    weatherText: str
+    hasPrecipitation: bool
     precipitation: Optional[str]
-    is_day_time: bool
+    isDayTime: bool
     temperature: MultimetricTemperature
-    apparent_temperature: MultimetricTemperature
-    real_feel_temperature: MultimetricTemperature
-    real_feel_temperature_shade: MultimetricTemperature
-    relative_humidity: float
-    cloud_cover: float
+    apparentTemperature: MultimetricTemperature
+    realFeelTemperature: MultimetricTemperature
+    realFeelTemperatureShade: MultimetricTemperature
+    relativeHumidity: float
+    cloudCover: float
 
 
 class AccuSummary(BaseModel):
-    icon_phrase: str
-    has_precipitation: bool
-    short_phrase: str
-    long_phrase: str
-    precipitation_probability: float
-    thunderstorm_probability: float
-    rain_probability: float
-    snow_probability: float
-    ice_probability: float
-    total_liquid: ValueUnit
+    iconPhrase: str
+    hasPrecipitation: bool
+    shortPhrase: str
+    longPhrase: str
+    precipitationProbability: float
+    thunderstormProbability: float
+    rainProbability: float
+    snowProbability: float
+    iceProbability: float
+    totalLiquid: ValueUnit
     rain: ValueUnit
     snow: ValueUnit
     ice: ValueUnit
-    hours_of_precipitation: float
-    hours_of_rain: float
-    hours_of_snow: float
-    hours_of_ice: float
-    cloud_cover: float
+    hoursOfPrecipitation: float
+    hoursOfRain: float
+    hoursOfSnow: float
+    hoursOfIce: float
+    cloudCover: float
 
 
 class AccuDayForecast(BaseModel):
     date: datetime
     temperature: MinMaxTemperature
-    real_feel_temperature: MinMaxTemperature
-    real_feel_temperature_shade: MinMaxTemperature
+    realFeelTemperature: MinMaxTemperature
+    realFeelTemperature_shade: MinMaxTemperature
     day: AccuSummary
     night: AccuSummary
 
 
 class AccuHourForecast(BaseModel):
-    date_time: datetime
-    is_daylight: bool
+    dateTime: datetime
+    isDaylight: bool
     temperature: ValueUnit
-    real_feel_temperature: ValueUnit
-    icon_phrase: str
-    has_precipitation: bool
-    precipitation_probability: float
-    rain_probability: float
-    snow_probability: float
-    ice_probability: float
-    total_liquid: ValueUnit
+    realFeelTemperature: ValueUnit
+    iconPhrase: str
+    hasPrecipitation: bool
+    precipitationProbability: float
+    rainProbability: float
+    snowProbability: float
+    iceProbability: float
+    totalLiquid: ValueUnit
     rain: ValueUnit
     snow: ValueUnit
     ice: ValueUnit
-    cloud_cover: float
+    cloudCover: float
 
 
 class AccuFiveDayForecast(BaseModel):
-    effective_date: datetime
-    end_date: datetime
-    daily_forecasts: List[AccuDayForecast]
+    effectiveDate: datetime
+    endDate: datetime
+    dailyForecasts: List[AccuDayForecast]
 
 
 class AccuTwelveHourForecast(BaseModel):
@@ -104,7 +104,7 @@ class AccuTwelveHourForecast(BaseModel):
 class AccuForecast(BaseModel):
     timestamp: datetime
     conditions: AccuConditions
-    five_day: AccuFiveDayForecast
+    fiveDay: AccuFiveDayForecast
     hourly: AccuTwelveHourForecast
 
     def __str__(self):
