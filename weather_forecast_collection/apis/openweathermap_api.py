@@ -3,7 +3,6 @@
 """Collect forecast data from the OpenWeatherMap API."""
 
 from datetime import datetime
-from pprint import pprint
 from typing import Any, Dict, List
 
 import requests
@@ -19,14 +18,14 @@ class WeatherSummary(BaseModel):
 
 
 class OWMWeather(BaseModel):
-    datetime: datetime
+    dt: datetime
     clouds: float
     weather: WeatherSummary
     wind_speed: float
 
     def __init__(self, **data):
-        data["datetime"] = data["dt"]
-        data["weather"] = data["weather"][0]
+        if isinstance(data["weather"], list):
+            data["weather"] = data["weather"][0]
         super().__init__(**data)
 
 
@@ -38,32 +37,24 @@ class OWMWeatherCurrent(OWMWeather):
 
 
 class OWMWeatherHourly(OWMWeatherCurrent):
-    prob_of_precipitation: float
-
-    def __init__(self, **data):
-        data["prob_of_precipitation"] = data["pop"]
-        super().__init__(**data)
+    pop: float
 
 
 class OWMWeatherDaily(OWMWeather):
-    prob_of_precipitation: float
+    pop: float
     temp: Dict[str, float]
     feels_like: Dict[str, float]
 
-    def __init__(self, **data):
-        data["prob_of_precipitation"] = data["pop"]
-        super().__init__(**data)
-
 
 class OWMForecast(BaseModel):
-    datetime: datetime
+    timestamp: datetime
     current: OWMWeatherCurrent
     hourly: List[OWMWeatherHourly]
     daily: List[OWMWeatherDaily]
 
     def __str__(self) -> str:
         msg = "OpenWeatherMap Forecast\n"
-        msg += " (collected at " + self.datetime.strftime("%y-%m-%d %H:%M") + ")\n"
+        msg += " (collected at " + self.timestamp.strftime("%y-%m-%d %H:%M") + ")\n"
         msg += f" forecasts for {len(self.hourly)} hours and {len(self.daily)} days plus the current conditions"
         return msg
 
@@ -85,7 +76,7 @@ def tidy_daily_forecast(data: List[Dict[str, Any]]) -> List[OWMWeatherDaily]:
 
 def tidy_owm_onecall_data(data: Dict[str, Any]) -> OWMForecast:
     return OWMForecast(
-        datetime=datetime.now(),
+        timestamp=datetime.now(),
         current=tidy_current_forecast(data["current"]),
         hourly=tidy_hourly_forecast(data["hourly"]),
         daily=tidy_daily_forecast(data["daily"]),

@@ -80,35 +80,26 @@ class CCDataValues(BaseModel):
 
 
 class CCData(BaseModel):
-    start_time: datetime
+    startTime: datetime
     values: CCDataValues
-
-    def __init__(self, **data):
-        data["start_time"] = data["startTime"]
-        super().__init__(**data)
 
 
 class CCTimeline(BaseModel):
-    start_time: datetime
-    end_time: datetime
+    startTime: datetime
+    endTime: datetime
     timestep: TimeSteps
     intervals: List[CCData]
 
-    def __init__(self, **data):
-        data["start_time"] = data["startTime"]
-        data["end_time"] = data["endTime"]
-        super().__init__(**data)
-
 
 class CCForecastData(BaseModel):
-    datetime: datetime
+    timestamp: datetime
     current: CCTimeline
     oneHour: CCTimeline
     oneDay: CCTimeline
 
     def __str__(self) -> str:
         msg = "ClimaCell Forecast Data\n"
-        msg += f"  collected {self.datetime.strftime('%Y-%m-%d %H:%M:%S')}"
+        msg += f"  collected {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
         msg += f"  {len(self.current.intervals)} measures of current weather\n"
         msg += f"  {len(self.oneHour.intervals)} measures at 1 hour intervals\n"
         msg += f"  {len(self.oneDay.intervals)} measures at 1 day intervals\n"
@@ -117,7 +108,7 @@ class CCForecastData(BaseModel):
 
 def tidy_timeline(data: List[Dict[str, Any]]) -> CCForecastData:
     return CCForecastData(
-        datetime=datetime.now(),
+        timestamp=datetime.now(),
         current=CCTimeline(**data[0]),
         oneHour=CCTimeline(**data[1]),
         oneDay=CCTimeline(**data[2]),

@@ -5,14 +5,11 @@
 import pickle
 from datetime import datetime
 from pathlib import Path
-from pprint import pprint
 from typing import Any, Callable, Dict, List, Optional
 
 import requests
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
-
-from ..helpers import to_camel
 
 #### ---- Models ---- ####
 
@@ -21,24 +18,15 @@ class ValueUnit(BaseModel):
     value: float
     unit: str
 
-    class Config:
-        alias_generator = to_camel
-
 
 class MultimetricTemperature(BaseModel):
     metric: ValueUnit
     imperial: ValueUnit
 
-    class Config:
-        alias_generator = to_camel
-
 
 class MinMaxTemperature(BaseModel):
     minimum: ValueUnit
     maximum: ValueUnit
-
-    class Config:
-        alias_generator = to_camel
 
 
 class AccuConditions(BaseModel):
@@ -53,9 +41,6 @@ class AccuConditions(BaseModel):
     real_feel_temperature_shade: MultimetricTemperature
     relative_humidity: float
     cloud_cover: float
-
-    class Config:
-        alias_generator = to_camel
 
 
 class AccuSummary(BaseModel):
@@ -78,9 +63,6 @@ class AccuSummary(BaseModel):
     hours_of_ice: float
     cloud_cover: float
 
-    class Config:
-        alias_generator = to_camel
-
 
 class AccuDayForecast(BaseModel):
     date: datetime
@@ -89,9 +71,6 @@ class AccuDayForecast(BaseModel):
     real_feel_temperature_shade: MinMaxTemperature
     day: AccuSummary
     night: AccuSummary
-
-    class Config:
-        alias_generator = to_camel
 
 
 class AccuHourForecast(BaseModel):
@@ -111,9 +90,6 @@ class AccuHourForecast(BaseModel):
     ice: ValueUnit
     cloud_cover: float
 
-    class Config:
-        alias_generator = to_camel
-
 
 class AccuFiveDayForecast(BaseModel):
     effective_date: datetime
@@ -126,13 +102,13 @@ class AccuTwelveHourForecast(BaseModel):
 
 
 class AccuForecast(BaseModel):
-    datetime: datetime
+    timestamp: datetime
     conditions: AccuConditions
     five_day: AccuFiveDayForecast
     hourly: AccuTwelveHourForecast
 
     def __str__(self):
-        return f"Collected on {self.datetime.strftime('%y-%m-%d %H:%M:%S')}"
+        return f"Collected on {self.timestamp.strftime('%y-%m-%d %H:%M:%S')}"
 
 
 #### ---- Getters ---- ####
@@ -238,7 +214,7 @@ def get_accuweather_forecast(lat: float, long: float, api_key: str) -> AccuForec
     daily_forecast = get_five_day_forecast(loc_key=location, api_key=api_key)
     hourly_forecast = get_twelve_hour_forecast(loc_key=location, api_key=api_key)
     return AccuForecast(
-        datetime=datetime.now(),
+        timestamp=datetime.now(),
         conditions=conditions,
         five_day=daily_forecast,
         hourly=hourly_forecast,

@@ -26,20 +26,20 @@ class NWSPeriodForecast(BaseModel):
     windSpeed: str
 
 
-class NSWSevenDayForecast(BaseModel):
+class NWSSevenDayForecast(BaseModel):
     periods: List[NWSPeriodForecast]
 
 
-class NSWHourlyForecast(BaseModel):
+class NWSHourlyForecast(BaseModel):
     updated: datetime
     forecast_generator: str
     generated_at: datetime
     periods: List[NWSPeriodForecast]
 
 
-class NSWForecast(BaseModel):
-    seven_day: NSWSevenDayForecast
-    hourly_forecast: NSWHourlyForecast
+class NWSForecast(BaseModel):
+    seven_day: NWSSevenDayForecast
+    hourly_forecast: NWSHourlyForecast
 
 
 def get_grid_points(lat: float, long: float) -> Dict[Any, Any]:
@@ -61,19 +61,19 @@ def extract_period_data(res: requests.Response) -> List[NWSPeriodForecast]:
     return [NWSPeriodForecast(**d) for d in period_data]
 
 
-def get_seven_day_forecast(grid_x: int, grid_y: int) -> NSWSevenDayForecast:
+def get_seven_day_forecast(grid_x: int, grid_y: int) -> NWSSevenDayForecast:
     response = requests.get(
         f"https://api.weather.gov/gridpoints/BOX/{grid_x},{grid_y}/forecast"
     )
     if response.status_code == 200:
-        return NSWSevenDayForecast(periods=extract_period_data(response))
+        return NWSSevenDayForecast(periods=extract_period_data(response))
     else:
         raise HTTPError(response=response)
 
 
-def build_hourly_forecast(res: requests.Response) -> NSWHourlyForecast:
+def build_hourly_forecast(res: requests.Response) -> NWSHourlyForecast:
     props = res.json()["properties"]
-    return NSWHourlyForecast(
+    return NWSHourlyForecast(
         updated=props["updated"],
         forecast_generator=props["forecastGenerator"],
         generated_at=props["generatedAt"],
@@ -81,7 +81,7 @@ def build_hourly_forecast(res: requests.Response) -> NSWHourlyForecast:
     )
 
 
-def get_hourly_forecast(grid_x: int, grid_y: int) -> NSWHourlyForecast:
+def get_hourly_forecast(grid_x: int, grid_y: int) -> NWSHourlyForecast:
     response = requests.get(
         f"https://api.weather.gov/gridpoints/BOX/{grid_x},{grid_y}/forecast/hourly"
     )
@@ -91,8 +91,8 @@ def get_hourly_forecast(grid_x: int, grid_y: int) -> NSWHourlyForecast:
         raise HTTPError(response=response)
 
 
-def get_nsw_forecast(lat: float, long: float) -> NSWForecast:
+def get_nws_forecast(lat: float, long: float) -> NWSForecast:
     grid_x, grid_y = get_grid_coords(lat=lat, long=long)
     seven_day = get_seven_day_forecast(grid_x=grid_x, grid_y=grid_y)
     hourly_forecast = get_hourly_forecast(grid_x=grid_x, grid_y=grid_y)
-    return NSWForecast(seven_day=seven_day, hourly_forecast=hourly_forecast)
+    return NWSForecast(seven_day=seven_day, hourly_forecast=hourly_forecast)
