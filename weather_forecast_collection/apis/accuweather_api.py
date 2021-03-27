@@ -5,6 +5,7 @@
 import pickle
 from datetime import datetime
 from pathlib import Path
+from pprint import pprint
 from typing import Any, Callable, Dict, List, Optional
 
 import requests
@@ -15,96 +16,96 @@ from requests.exceptions import HTTPError
 
 
 class ValueUnit(BaseModel):
-    value: float
-    unit: str
+    Value: float
+    Unit: str
 
 
 class MultimetricTemperature(BaseModel):
-    metric: ValueUnit
-    imperial: ValueUnit
+    Metric: ValueUnit
+    Imperial: ValueUnit
 
 
 class MinMaxTemperature(BaseModel):
-    minimum: ValueUnit
-    maximum: ValueUnit
+    Minimum: ValueUnit
+    Maximum: ValueUnit
 
 
 class AccuConditions(BaseModel):
-    localObservationDateTime: datetime
-    weatherText: str
-    hasPrecipitation: bool
-    precipitation: Optional[str]
-    isDayTime: bool
-    temperature: MultimetricTemperature
-    apparentTemperature: MultimetricTemperature
-    realFeelTemperature: MultimetricTemperature
-    realFeelTemperatureShade: MultimetricTemperature
-    relativeHumidity: float
-    cloudCover: float
+    LocalObservationDateTime: datetime
+    WeatherText: str
+    HasPrecipitation: bool
+    Precipitation: Optional[str]
+    IsDayTime: bool
+    Temperature: MultimetricTemperature
+    ApparentTemperature: MultimetricTemperature
+    RealFeelTemperature: MultimetricTemperature
+    RealFeelTemperatureShade: MultimetricTemperature
+    RelativeHumidity: float
+    CloudCover: float
 
 
 class AccuSummary(BaseModel):
-    iconPhrase: str
-    hasPrecipitation: bool
-    shortPhrase: str
-    longPhrase: str
-    precipitationProbability: float
-    thunderstormProbability: float
-    rainProbability: float
-    snowProbability: float
-    iceProbability: float
-    totalLiquid: ValueUnit
-    rain: ValueUnit
-    snow: ValueUnit
-    ice: ValueUnit
-    hoursOfPrecipitation: float
-    hoursOfRain: float
-    hoursOfSnow: float
-    hoursOfIce: float
-    cloudCover: float
+    IconPhrase: str
+    HasPrecipitation: bool
+    ShortPhrase: str
+    LongPhrase: str
+    PrecipitationProbability: float
+    ThunderstormProbability: float
+    RainProbability: float
+    SnowProbability: float
+    IceProbability: float
+    TotalLiquid: ValueUnit
+    Rain: ValueUnit
+    Snow: ValueUnit
+    Ice: ValueUnit
+    HoursOfPrecipitation: float
+    HoursOfRain: float
+    HoursOfSnow: float
+    HoursOfIce: float
+    CloudCover: float
 
 
 class AccuDayForecast(BaseModel):
-    date: datetime
-    temperature: MinMaxTemperature
-    realFeelTemperature: MinMaxTemperature
-    realFeelTemperature_shade: MinMaxTemperature
-    day: AccuSummary
-    night: AccuSummary
+    Date: datetime
+    Temperature: MinMaxTemperature
+    RealFeelTemperature: MinMaxTemperature
+    RealFeelTemperatureShade: MinMaxTemperature
+    Day: AccuSummary
+    Night: AccuSummary
 
 
 class AccuHourForecast(BaseModel):
-    dateTime: datetime
-    isDaylight: bool
-    temperature: ValueUnit
-    realFeelTemperature: ValueUnit
-    iconPhrase: str
-    hasPrecipitation: bool
-    precipitationProbability: float
-    rainProbability: float
-    snowProbability: float
-    iceProbability: float
-    totalLiquid: ValueUnit
-    rain: ValueUnit
-    snow: ValueUnit
-    ice: ValueUnit
-    cloudCover: float
+    DateTime: datetime
+    IsDaylight: bool
+    Temperature: ValueUnit
+    RealFeelTemperature: ValueUnit
+    IconPhrase: str
+    HasPrecipitation: bool
+    PrecipitationProbability: float
+    RainProbability: float
+    SnowProbability: float
+    IceProbability: float
+    TotalLiquid: ValueUnit
+    Rain: ValueUnit
+    Snow: ValueUnit
+    Ice: ValueUnit
+    CloudCover: float
 
 
 class AccuFiveDayForecast(BaseModel):
-    effectiveDate: datetime
-    endDate: datetime
-    dailyForecasts: List[AccuDayForecast]
+    EffectiveDate: datetime
+    EndDate: datetime
+    DailyForecasts: List[AccuDayForecast]
 
 
 class AccuTwelveHourForecast(BaseModel):
-    periods: List[AccuHourForecast]
+    Periods: List[AccuHourForecast]
 
 
 class AccuForecast(BaseModel):
     timestamp: datetime
     conditions: AccuConditions
-    fiveDay: AccuFiveDayForecast
+    fiveday: AccuFiveDayForecast
     hourly: AccuTwelveHourForecast
 
     def __str__(self):
@@ -178,9 +179,9 @@ def get_current_conditions(loc_key: str, api_key: str) -> AccuConditions:
 
 def tidy_five_day_forecast(data: Dict[str, Any]) -> AccuFiveDayForecast:
     return AccuFiveDayForecast(
-        effective_date=data["Headline"]["EffectiveDate"],
-        end_date=data["Headline"]["EndDate"],
-        daily_forecasts=[AccuDayForecast(**d) for d in data["DailyForecasts"]],
+        EffectiveDate=data["Headline"]["EffectiveDate"],
+        EndDate=data["Headline"]["EndDate"],
+        DailyForecasts=[AccuDayForecast(**d) for d in data["DailyForecasts"]],
     )
 
 
@@ -194,7 +195,7 @@ def get_five_day_forecast(loc_key: str, api_key: str) -> AccuFiveDayForecast:
 
 
 def tidy_hour_forecast(data: List[Dict[str, Any]]) -> AccuTwelveHourForecast:
-    return AccuTwelveHourForecast(periods=[AccuHourForecast(**d) for d in data])
+    return AccuTwelveHourForecast(Periods=[AccuHourForecast(**d) for d in data])
 
 
 def get_twelve_hour_forecast(loc_key: str, api_key: str) -> AccuTwelveHourForecast:
@@ -216,6 +217,6 @@ def get_accuweather_forecast(lat: float, long: float, api_key: str) -> AccuForec
     return AccuForecast(
         timestamp=datetime.now(),
         conditions=conditions,
-        five_day=daily_forecast,
+        fiveday=daily_forecast,
         hourly=hourly_forecast,
     )
