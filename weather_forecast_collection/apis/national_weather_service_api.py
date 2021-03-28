@@ -38,6 +38,7 @@ class NWSHourlyForecast(BaseModel):
 
 
 class NWSForecast(BaseModel):
+    timestamp: datetime
     seven_day: NWSSevenDayForecast
     hourly_forecast: NWSHourlyForecast
 
@@ -95,4 +96,6 @@ def get_nws_forecast(lat: float, long: float) -> NWSForecast:
     grid_x, grid_y = get_grid_coords(lat=lat, long=long)
     seven_day = get_seven_day_forecast(grid_x=grid_x, grid_y=grid_y)
     hourly_forecast = get_hourly_forecast(grid_x=grid_x, grid_y=grid_y)
-    return NWSForecast(seven_day=seven_day, hourly_forecast=hourly_forecast)
+    return NWSForecast(
+        timestamp=datetime.now(), seven_day=seven_day, hourly_forecast=hourly_forecast
+    )
