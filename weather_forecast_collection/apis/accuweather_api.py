@@ -94,7 +94,7 @@ class AccuHourForecast(BaseModel):
 
 class AccuFiveDayForecast(BaseModel):
     EffectiveDate: datetime
-    EndDate: datetime
+    EndDate: Optional[datetime]
     DailyForecasts: List[AccuDayForecast]
 
 
