@@ -8,6 +8,10 @@
 
 A collection of weather forecasts and nowcasts.
 
+## TODO
+
+- MetaWeather and Rainery sources
+
 ## Install
 
 ```bash
@@ -28,13 +32,15 @@ data = get_accuweather_forecast(lat=latitude, long=longitude, api_key=ACCU_KEY)
 
 ## Sources
 
+Here is a good list of weather sources: [open weather APIs](https://github.com/public-apis/public-apis#weather).
+
 ### AccuWeather (done)
 
 - https://developer.accuweather.com/apis
 - https://developer.accuweather.com/accuweather-current-conditions-api/apis
 - https://developer.accuweather.com/accuweather-forecast-api/apis
 
-### The Weather Company (The Weather Channel)
+### The Weather Company (The Weather Channel) (nope)
 
 From what I can tell, this API used to be open, but is now only available to
 individuals with a "personal weather station" linked with Weather Underground.
@@ -46,7 +52,7 @@ individuals with a "personal weather station" linked with Weather Underground.
 - https://www.weather.gov/documentation/services-web-api
 - https://weather-gov.github.io/api/
 
-### Yahoo Weather (skip)
+### Yahoo Weather (nope)
 
 A banner on the documentation website indicates that this API will be closed soon.
 
@@ -54,7 +60,7 @@ A banner on the documentation website indicates that this API will be closed soo
 
 - https://developer.yahoo.com/weather/documentation.html
 
-### Dark Sky
+### Dark Sky (nope)
 
 The API is no longer open, but I may try to webscrape the HTML or use RapidAPI.
 
@@ -68,3 +74,22 @@ The API is no longer open, but I may try to webscrape the HTML or use RapidAPI.
 ### OpenWeatherMap (done)
 
 - https://openweathermap.org/api
+
+### MetaWeather
+
+- https://www.metaweather.com
+- https://www.metaweather.com/api/
+
+### The Rainery (maybe)
+
+Free tier is restricted to 50 requests per day.
+
+- https://therainery.com/documentation/#/
+- https://therainery.com/pricing/
+
+### openSenseMap (TODO)
+
+The data comes from live weather stations.
+This could be a good way to get the "true" current weather.
+
+- https://api.opensensemap.org
