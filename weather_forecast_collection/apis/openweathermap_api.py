@@ -2,7 +2,7 @@
 
 """Collect forecast data from the OpenWeatherMap API."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List
 
 import requests
@@ -64,7 +64,8 @@ class OWMForecast(BaseModel):
 
 
 def tidy_current_forecast(data: Dict[str, Any]) -> OWMWeatherCurrent:
-    return OWMWeatherCurrent(**data)
+    d = OWMWeatherCurrent(**data)
+    return d
 
 
 def tidy_hourly_forecast(data: List[Dict[str, Any]]) -> List[OWMWeatherHourly]:
@@ -77,7 +78,7 @@ def tidy_daily_forecast(data: List[Dict[str, Any]]) -> List[OWMWeatherDaily]:
 
 def tidy_owm_onecall_data(data: Dict[str, Any]) -> OWMForecast:
     return OWMForecast(
-        timestamp=datetime.now(),
+        timestamp=datetime.now(timezone.utc),
         current=tidy_current_forecast(data["current"]),
         hourly=tidy_hourly_forecast(data["hourly"]),
         daily=tidy_daily_forecast(data["daily"]),
@@ -105,5 +106,5 @@ def get_onecall_data(lat: float, long: float, api_key: str) -> OWMForecast:
 #### ---- Main ---- ####
 
 
-def get_openweathermap_data(lat: float, long: float, api_key: str):
+def get_openweathermap_data(lat: float, long: float, api_key: str) -> OWMForecast:
     return get_onecall_data(lat=lat, long=long, api_key=api_key)
