@@ -103,6 +103,7 @@ class AccuTwelveHourForecast(BaseModel):
 
 
 class AccuForecast(BaseModel):
+    version: int = 1
     timestamp: datetime
     conditions: AccuConditions
     fiveday: AccuFiveDayForecast

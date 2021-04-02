@@ -93,3 +93,4 @@ The data comes from live weather stations.
 This could be a good way to get the "true" current weather.
 
 - https://api.opensensemap.org
+- https://docs.opensensemap.org

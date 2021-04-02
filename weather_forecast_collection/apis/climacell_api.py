@@ -92,6 +92,7 @@ class CCTimeline(BaseModel):
 
 
 class CCForecastData(BaseModel):
+    version: int = 1
     timestamp: datetime
     current: CCTimeline
     oneHour: CCTimeline

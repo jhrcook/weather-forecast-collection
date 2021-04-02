@@ -38,6 +38,7 @@ class NWSHourlyForecast(BaseModel):
 
 
 class NWSForecast(BaseModel):
+    version: int = 1
     timestamp: datetime
     seven_day: NWSSevenDayForecast
     hourly_forecast: NWSHourlyForecast

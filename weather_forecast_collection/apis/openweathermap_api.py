@@ -47,6 +47,7 @@ class OWMWeatherDaily(OWMWeather):
 
 
 class OWMForecast(BaseModel):
+    version: int = 1
     timestamp: datetime
     current: OWMWeatherCurrent
     hourly: List[OWMWeatherHourly]
