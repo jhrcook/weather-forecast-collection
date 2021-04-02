@@ -3,7 +3,7 @@
 """Collect forecast data from the Accuweather API."""
 
 import pickle
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from pprint import pprint
 from typing import Any, Callable, Dict, List, Optional
@@ -216,7 +216,7 @@ def get_accuweather_forecast(lat: float, long: float, api_key: str) -> AccuForec
     daily_forecast = get_five_day_forecast(loc_key=location, api_key=api_key)
     hourly_forecast = get_twelve_hour_forecast(loc_key=location, api_key=api_key)
     return AccuForecast(
-        timestamp=datetime.now(),
+        timestamp=datetime.now(timezone.utc),
         conditions=conditions,
         fiveday=daily_forecast,
         hourly=hourly_forecast,
