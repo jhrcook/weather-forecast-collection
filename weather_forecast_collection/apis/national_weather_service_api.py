@@ -2,7 +2,7 @@
 
 """Collect forecast data from the National Weather Service API."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -98,5 +98,7 @@ def get_nws_forecast(lat: float, long: float) -> NWSForecast:
     seven_day = get_seven_day_forecast(grid_x=grid_x, grid_y=grid_y)
     hourly_forecast = get_hourly_forecast(grid_x=grid_x, grid_y=grid_y)
     return NWSForecast(
-        timestamp=datetime.now(), seven_day=seven_day, hourly_forecast=hourly_forecast
+        timestamp=datetime.now(timezone.utc),
+        seven_day=seven_day,
+        hourly_forecast=hourly_forecast,
     )

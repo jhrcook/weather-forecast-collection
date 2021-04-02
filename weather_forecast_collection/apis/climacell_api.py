@@ -4,7 +4,6 @@
 
 from datetime import datetime, timezone
 from enum import Enum
-from pprint import pprint
 from typing import Any, Dict, List
 
 import requests
@@ -109,7 +108,6 @@ class CCForecastData(BaseModel):
 
 
 def tidy_timeline(data: List[Dict[str, Any]]) -> CCForecastData:
-    pprint(CCTimeline(**data[2]).dict())
     return CCForecastData(
         timestamp=datetime.now(timezone.utc),
         current=CCTimeline(**data[0]),
