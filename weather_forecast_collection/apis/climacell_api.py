@@ -2,7 +2,7 @@
 
 """Collect forecast data from the ClimaCell API."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List
 
@@ -92,6 +92,7 @@ class CCTimeline(BaseModel):
 
 
 class CCForecastData(BaseModel):
+    version: int = 1
     timestamp: datetime
     current: CCTimeline
     oneHour: CCTimeline
@@ -108,7 +109,7 @@ class CCForecastData(BaseModel):
 
 def tidy_timeline(data: List[Dict[str, Any]]) -> CCForecastData:
     return CCForecastData(
-        timestamp=datetime.now(),
+        timestamp=datetime.now(timezone.utc),
         current=CCTimeline(**data[0]),
         oneHour=CCTimeline(**data[1]),
         oneDay=CCTimeline(**data[2]),

@@ -13,7 +13,7 @@ def read(file_name: str):
 
 setup(
     name="weather_forecast_collection",
-    version="0.1.5",
+    version="0.1.6",
     author="Joshua Cook",
     description=("Simple wrappers for several open weather APIs."),
     license="BSD",
